@@ -1,0 +1,130 @@
+# ===========================
+# Entornos virtuales
+# ===========================
+venv/
+.venv/
+env/
+ENV/
+.python-version
+
+# ===========================
+# Python
+# ===========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+develop-eggs/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+pip-wheel-metadata/
+.eggs/
+MANIFEST
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# ===========================
+# Jupyter / Notebooks
+# ===========================
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+.ipython/profile_default/history.sqlite
+
+# ===========================
+# Datos
+# (mantener estructura, ignorar contenido)
+# ===========================
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/interim/*
+!data/interim/.gitkeep
+data/external/*
+!data/external/.gitkeep
+*.csv
+*.tsv
+*.parquet
+*.feather
+*.json.gz
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.xlsx
+*.xls
+*.sqlite
+*.db
+
+# ===========================
+# Variables de entorno y secretos
+# ===========================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+credentials.json
+
+# ===========================
+# Logs y artefactos
+# ===========================
+*.log
+logs/
+outputs/
+reports/*.html
+reports/*.pdf
+models/
+artifacts/
+.cache/
+tmp/
+temp/
+
+# ===========================
+# IDE / Editores
+# ===========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.spyderproject
+.spyproject
+
+# ===========================
+# Sistema operativo
+# ===========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ===========================
+# DVC (si se usa versionado de datos)
+# ===========================
+# data/.dvc/cache/
+# .dvc/tmp/
+# .dvc/config.local
