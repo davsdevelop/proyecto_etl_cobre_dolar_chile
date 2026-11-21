@@ -50,27 +50,27 @@ coverage.xml
 # Datos
 # (mantener estructura, ignorar contenido)
 # ===========================
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
-data/interim/*
-!data/interim/.gitkeep
-data/external/*
-!data/external/.gitkeep
-*.csv
-*.tsv
-*.parquet
-*.feather
-*.json.gz
-*.pkl
-*.pickle
-*.h5
-*.hdf5
-*.xlsx
-*.xls
-*.sqlite
-*.db
+# data/raw/*
+# !data/raw/.gitkeep
+# data/processed/*
+# !data/processed/.gitkeep
+# data/interim/*
+# !data/interim/.gitkeep
+# data/external/*
+# !data/external/.gitkeep
+# *.csv
+# *.tsv
+# *.parquet
+# *.feather
+# *.json.gz
+# *.pkl
+# *.pickle
+# *.h5
+# *.hdf5
+# *.xlsx
+# *.xls
+# *.sqlite
+# *.db
 
 # ===========================
 # Variables de entorno y secretos
