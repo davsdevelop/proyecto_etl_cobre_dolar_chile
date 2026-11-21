@@ -128,3 +128,10 @@ desktop.ini
 # data/.dvc/cache/
 # .dvc/tmp/
 # .dvc/config.local
+
+# ===========================
+# Notas internas (no publicar)
+# ===========================
+command.txt
+MEMORY.md
+VOL_libros.md
