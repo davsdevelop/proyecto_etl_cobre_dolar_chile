@@ -1,78 +1,120 @@
-# ETL Cobre / Dólar Chile
+# ETL Cobre, Dólar e IPSA — Chile
 
-Proyecto de ingesta, análisis y transformación de datos históricos del IPSA, organizado siguiendo la metodología **Cookiecutter Data Science**. Toda la lógica ETL vive en un notebook único: `src/data/ETL_IPSA.ipynb`.
+![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?style=flat&logo=python&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-3.1.1-150458?style=flat&logo=pandas&logoColor=white)
+![Parquet](https://img.shields.io/badge/Format-Parquet%20(PyArrow)-50ABF1?style=flat)
+![BCCh API](https://img.shields.io/badge/Source-Banco%20Central%20de%20Chile-003366?style=flat)
 
-## Estructura del proyecto
+Pipeline ETL (Volumen 1) orientado a modelar la relación económica entre el precio del **cobre**, el **dólar observado (USD/CLP)** y el índice bursátil **IPSA** en Chile. Está organizado bajo la metodología **Cookiecutter Data Science** con un notebook modular por fuente de datos y salidas en formato columnar **Parquet**.
+
+---
+
+## Arquitectura del Flujo
+
+```mermaid
+flowchart LR
+    A1[("CSV Histórico IPSA<br/>Hugging Face")] --> B1["ETL_IPSA.ipynb"]
+    A2[("API Banco Central<br/>Serie F073.TCO.PRE.Z.D")] --> B2["ETL_DOLAR_API.ipynb"]
+    A3[("API Banco Central<br/>Serie F019.PPB.PRE.100.D")] --> B3["ETL_COBRE_API.ipynb"]
+
+    B1 --> C["Limpieza y Transformación<br/>Pandas (tipos, nulos, fechas)"]
+    B2 --> C
+    B3 --> C
+
+    C --> D1[("ipsa_clean.parquet")]
+    C --> D2[("dolar_clean.parquet")]
+    C --> D3[("cobre_clean.parquet")]
+```
+
+---
+
+## Fuentes de Datos y Resultados
+
+| Fuente | Origen / Serie | Notebook ETL | Salida Parquet | Dimensiones | Rango Temporal | Nulos / Duplicados |
+| :--- | :--- | :--- | :--- | :---: | :---: | :---: |
+| **IPSA** | CSV en Hugging Face (`DVidelaS/historico_ipsa_chile`) | `src/data/ETL_IPSA.ipynb` | `ipsa_clean.parquet` | 707 × 10 | 2024-01-19 a 2026-11-20 | 0 / 0 |
+| **Dólar Observado** | API Banco Central (`F073.TCO.PRE.Z.D`) | `src/data/ETL_DOLAR_API.ipynb` | `dolar_clean.parquet` | 721 × 6 | 2024-01-02 a 2026-11-23 | 0 / 0 |
+| **Cobre** | API Banco Central (`F019.PPB.PRE.100.D`) | `src/data/ETL_COBRE_API.ipynb` | `cobre_clean.parquet` | 721 × 6 | 2024-01-02 a 2026-11-23 | 0 / 0 |
+
+*Nota de calidad:* Los valores `NaN` originales en las series del Banco Central corresponden a fines de semana y feriados bancarios, por lo que se eliminan de forma justificada sin imputación artificial. En el IPSA se descarta la columna `Vol.` por estar 100% vacía.
+
+---
+
+## Diccionario de Datos (Salidas Parquet)
+
+* **Variables temporales comunes (los 3 datasets):** `fecha` (`datetime64`), `anio` (`int`), `mes` (`int`), `dia` (`int`), `dia_semana` (`string`).
+* **IPSA (`ipsa_clean.parquet`):** `ultimo`, `apertura`, `maximo`, `minimo` (puntos del índice, `float64`) y `porcentaje_variacion` (variación diaria en %, `float64`).
+* **Dólar (`dolar_clean.parquet`):** `dolar_observado` (pesos chilenos por dólar, CLP/USD, `float64`).
+* **Cobre (`cobre_clean.parquet`):** `cobre_observado` (precio del cobre refinado, USD/lb, `float64`).
+
+---
+
+## Estructura del Proyecto
 
 ```text
 .
 ├── data/
-│   ├── raw/          # CSV original descargado desde Hugging Face
-│   ├── interim/      # Datos intermedios
-│   └── processed/    # ipsa_clean.parquet listo para análisis
-├── notebooks/        # Análisis exploratorio (EDA)
+│   ├── raw/                        # CSV original del IPSA descargado desde Hugging Face
+│   ├── interim/                    # Datos intermedios
+│   └── processed/                  # Salidas limpias en Parquet
+│       ├── ipsa_clean.parquet
+│       ├── dolar_clean.parquet
+│       └── cobre_clean.parquet
+├── notebooks/                      # Reservado para EDA (Volumen 2)
 ├── src/
 │   ├── data/
-│   │   └── ETL_IPSA.ipynb    # flujo ETL completo
-│   └── models/       # Código modular de modelado
-├── requirements.txt
+│   │   ├── ETL_IPSA.ipynb          # Ingesta y limpieza del IPSA
+│   │   ├── ETL_DOLAR_API.ipynb     # Ingesta vía API BCCh y limpieza del Dólar
+│   │   └── ETL_COBRE_API.ipynb     # Ingesta vía API BCCh y limpieza del Cobre
+│   └── models/                     # Reservado para modelamiento (Volúmenes 3 y 4)
+├── .env.example                    # Plantilla de variables de entorno
+├── project_context.md              # Documentación detallada del proyecto
+├── requirements.txt                # Dependencias fijadas
 └── README.md
 ```
 
-## Uso
+---
+
+## Configuración y Ejecución
+
+### 1. Instalar dependencias
+Requiere **Python 3.12 o superior**.
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+```
+
+### 2. Configurar variables de entorno
+Copia la plantilla `.env.example` a `.env` y completa tus credenciales de la API del Banco Central de Chile:
+
+```bash
 cp .env.example .env
 ```
 
-Abre `src/data/ETL_IPSA.ipynb` y ejecuta las celdas en orden, o usa **Restart & Run All**.
-
-## Dependencias
-
-`requirements.txt` declara únicamente las dependencias directas del proyecto, fijadas a su versión estable más reciente:
-
-```text
-pandas==3.1.1
-pyarrow==26.0.1
-huggingface_hub==2.4.0
-python-dotenv==1.2.4
-requests==2.34.2
-ipykernel==7.4.0
-nbconvert==7.17.2
-```
-
-Versión de Python recomendada: **3.12 o superior** (probado con 3.14.5).
-
-## Flujo del notebook
-
-1. **Extracción:** descarga automática del CSV desde Hugging Face con `huggingface_hub`, creando las carpetas necesarias y escribiendo de forma atómica en `data/raw/`. Si el archivo ya existe, se reutiliza; `FORCE_DOWNLOAD = True` fuerza una nueva descarga.
-2. **Análisis inicial:** exploración del dataset crudo con pandas.
-3. **Transformación:** normaliza nombres, convierte fechas y números en formato español, elimina `Vol.` y agrega variables derivadas.
-4. **Persistencia:** guarda `data/processed/ipsa_clean.parquet`, preservando los tipos de datos.
-
-## Configuración
-
-`.env` define la fuente de datos:
-
 ```dotenv
-IPSA_DATASET_URL=https://huggingface.co/datasets/DVidelaS/historico_ipsa_chile/resolve/main/datos_historicos_del_IPSA.csv
+IPSA_DATASET_URL=[https://huggingface.co/datasets/DVidelaS/historico_ipsa_chile/resolve/main/datos_historicos_del_IPSA.csv](https://huggingface.co/datasets/DVidelaS/historico_ipsa_chile/resolve/main/datos_historicos_del_IPSA.csv)
+
+DOLAR_API_BC_URL=[https://si3.bcentral.cl/SieteRestWS/SieteRestWS.ashx](https://si3.bcentral.cl/SieteRestWS/SieteRestWS.ashx)
+DOLAR_API_BC_TOKEN=tu_token_bcch
+
+COBRE_API_BC_URL=[https://si3.bcentral.cl/SieteRestWS/SieteRestWS.ashx](https://si3.bcentral.cl/SieteRestWS/SieteRestWS.ashx)
+COBRE_API_BC_TOKEN=tu_token_bcch
 ```
 
-Opcionalmente, `IPSA_DATASET_REVISION` permite fijar un commit o tag del dataset para que la descarga sea reproducible.
+### 3. Ejecutar los notebooks ETL
+Abre y ejecuta cada notebook en `src/data/` con **Restart & Run All**:
+1. `ETL_IPSA.ipynb`
+2. `ETL_DOLAR_API.ipynb`
+3. `ETL_COBRE_API.ipynb`
 
-## Salida
+Cada notebook resuelve rutas con `pathlib`, valida las respuestas y guarda su archivo `.parquet` de forma atómica en `data/processed/`.
 
-```text
-data/processed/ipsa_clean.parquet
-```
+---
 
-Parquet preserva los tipos (`datetime64`, `float64`, `int32`, `string`) y evita la pérdida de tipos que ocurre al releer un CSV.
+## Próximos Pasos (Roadmap)
 
-## Exportar el notebook a PDF
-
-```bash
-jupyter nbconvert --to pdf src/data/ETL_IPSA.ipynb
-```
+* **Volumen 2:** Alineación temporal (intersección de días hábiles) y Análisis Exploratorio de Datos (EDA).
+* **Volumen 3:** *Feature Engineering* y preparación de series para modelamiento.
+* **Volumen 4:** Modelamiento predictivo, evaluación e interpretación.
