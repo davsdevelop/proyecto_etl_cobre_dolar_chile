@@ -13,6 +13,8 @@ Pipeline ETL (Volumen 1) orientado a modelar la relación económica entre el pr
 
 ## Arquitectura del Flujo
 
+![Arquitectura del Pipeline ETL Cobre, Dólar e IPSA](docs/captures/00_arquitectura.jpeg)
+
 ```mermaid
 flowchart LR
     A1[("CSV Histórico IPSA<br/>Hugging Face")] --> B1["ETL_IPSA.ipynb"]
@@ -62,6 +64,9 @@ flowchart LR
 │       ├── ipsa_clean.parquet
 │       ├── dolar_clean.parquet
 │       └── cobre_clean.parquet
+├── docs/
+│   └── captures/
+│       └── 00_arquitectura.jpeg    # Diagrama de arquitectura del pipeline
 ├── notebooks/                      # Reservado para EDA (Volumen 2)
 ├── src/
 │   ├── data/
