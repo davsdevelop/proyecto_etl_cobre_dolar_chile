@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="209" height="20" role="img" aria-label="Source: Banco Central de Chile">
+  <title>Source: Banco Central de Chile</title>
+  <defs>
+    <clipPath id="round"><rect width="209" height="20" rx="3"/></clipPath>
+  </defs>
+  <g clip-path="url(#round)">
+    <rect width="209" height="20" fill="#555"/>
+    <rect x="50" width="159" height="20" fill="#003366"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,DejaVu Sans,sans-serif" font-size="11">
+    <text x="25.0" y="14">Source</text>
+    <text x="129.5" y="14">Banco Central de Chile</text>
+  </g>
+</svg>

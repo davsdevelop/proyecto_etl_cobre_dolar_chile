@@ -1,9 +1,11 @@
 # ETL Cobre, Dólar e IPSA — Chile
 
-![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?style=flat&logo=python&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-3.1.1-150458?style=flat&logo=pandas&logoColor=white)
-![Parquet](https://img.shields.io/badge/Format-Parquet%20(PyArrow)-50ABF1?style=flat)
-![BCCh API](https://img.shields.io/badge/Source-Banco%20Central%20de%20Chile-003366?style=flat)
+<p align="left">
+  <img alt="Python 3.12+" src="docs/badges/python.svg" height="20">
+  <img alt="Pandas 3.1.1" src="docs/badges/pandas.svg" height="20">
+  <img alt="Formato Parquet (PyArrow)" src="docs/badges/parquet.svg" height="20">
+  <img alt="Fuente: Banco Central de Chile" src="docs/badges/bcch.svg" height="20">
+</p>
 
 Pipeline ETL (Volumen 1) orientado a modelar la relación económica entre el precio del **cobre**, el **dólar observado (USD/CLP)** y el índice bursátil **IPSA** en Chile. Está organizado bajo la metodología **Cookiecutter Data Science** con un notebook modular por fuente de datos y salidas en formato columnar **Parquet**.
 
